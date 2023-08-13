@@ -3,23 +3,8 @@ using System.Collections.Generic;
 using Unity.Services.Lobbies;
 using UnityEngine;
 
-public class LobbyEvents : SaiMonoBehaviour
+public class LobbyEvents : LobbyAbstract
 {
-    public LobbyManager lobbyManager;
-
-    protected override void LoadComponents()
-    {
-        base.LoadComponents();
-        this.LoadLobbyManager();
-    }
-
-    protected virtual void LoadLobbyManager()
-    {
-        if (this.lobbyManager != null) return;
-        this.lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
-        Debug.LogWarning(transform.name + ": LoadLobbyManager", gameObject);
-    }
-
     public virtual void SubscribeToLobbyEvents()
     {
         var callbacks = new LobbyEventCallbacks();
