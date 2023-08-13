@@ -40,13 +40,14 @@ public class GameManager : Singleton<GameManager>
         else this.networkManager.StartClient();
     }
 
-    protected virtual void ReceiveIncomingDetail()
+    protected virtual async void ReceiveIncomingDetail()
     {
+        if (NetworkTransport.SessionHasStarted) return;
         Debug.LogWarning("Receive Incoming Detail");
 
-        if (NetworkTransport.SessionHasStarted) return;
-
-        var incomingSessionDetails = IncomingSessionDetails.FromUnityLobby(LobbyManager.Instance.lobby);
+        string lobbyId = LobbyManager.Instance.lobbyId;
+        var lobby = await LobbyService.Instance.GetLobbyAsync(lobbyId);
+        var incomingSessionDetails = IncomingSessionDetails.FromUnityLobby(lobby);
         NetworkTransport.UpdateSessionDetails(incomingSessionDetails);
     }
 
@@ -73,9 +74,12 @@ public class GameManager : Singleton<GameManager>
         var outgoingSessionDetails = NetworkTransport.OutgoingSessionDetails;
 
         var updatePlayerOptions = new UpdatePlayerOptions();
+        string lobbyId = LobbyManager.Instance.lobbyId;
+        string playerId = LobbyManager.Instance.playerId;
+
         if (outgoingSessionDetails.AddTo(updatePlayerOptions))
         {
-            await LobbyService.Instance.UpdatePlayerAsync(LobbyManager.Instance.lobbyId, LobbyManager.Instance.playerId, updatePlayerOptions);
+            await LobbyService.Instance.UpdatePlayerAsync(lobbyId, playerId, updatePlayerOptions);
         }
 
         if (LobbyManager.Instance.isHost)
@@ -83,7 +87,7 @@ public class GameManager : Singleton<GameManager>
             var updateLobbyOptions = new UpdateLobbyOptions();
             if (outgoingSessionDetails.AddTo(updateLobbyOptions))
             {
-                await LobbyService.Instance.UpdateLobbyAsync(LobbyManager.Instance.lobbyId, updateLobbyOptions);
+                await LobbyService.Instance.UpdateLobbyAsync(lobbyId, updateLobbyOptions);
             }
         }
     }
