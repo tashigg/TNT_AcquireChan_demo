@@ -15,6 +15,7 @@ public class LobbyManager : Singleton<LobbyManager>
     public TMP_InputField inputLobbyCode;
     public TMP_InputField inputPlayerCount;
     public TextMeshProUGUI txtTextLobbyId;
+    public string profileName;
     public string lobbyName;
     public string lobbyCode;
     public string lobbyId;
@@ -26,6 +27,7 @@ public class LobbyManager : Singleton<LobbyManager>
     protected override void Awake()
     {
         DontDestroyOnLoad(gameObject);
+
         this.ServiceInit();
     }
 
@@ -92,6 +94,7 @@ public class LobbyManager : Singleton<LobbyManager>
     {
         this.lobbyName = this.inputLobbyName.text;
         this.maxPlayer = int.Parse(this.inputMaxPlayer.text);
+
         CreateLobbyOptions options = new CreateLobbyOptions
         {
             IsPrivate = false
@@ -122,7 +125,11 @@ public class LobbyManager : Singleton<LobbyManager>
 
     protected virtual async void ServiceInit()
     {
-        await UnityServices.InitializeAsync();
+        this.profileName = "profile_"+Random.Range(1111111, 10001000).ToString();
+        Debug.Log("ServiceInit: " + this.profileName);
+        var options = new InitializationOptions();
+        options.SetProfile(this.profileName);
+        await UnityServices.InitializeAsync(options);
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
 
