@@ -45,6 +45,13 @@ public class GameManager : Singleton<GameManager>
     protected virtual void ReceiveIncomingDetail()
     {
         Debug.LogWarning("Receive Incoming Detail");
+
+        if (NetworkTransport.SessionHasStarted)
+        {
+            Invoke(nameof(ReceiveIncomingDetail), 1f);
+            return;
+        }
+
         var incomingSessionDetails = IncomingSessionDetails.FromUnityLobby(LobbyManager.Instance.lobby);
         NetworkTransport.UpdateSessionDetails(incomingSessionDetails);
     }
