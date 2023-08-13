@@ -15,6 +15,7 @@ public class LobbyManager : Singleton<LobbyManager>
     public TMP_InputField inputLobbyCode;
     public TMP_InputField inputPlayerCount;
     public TextMeshProUGUI txtTextLobbyId;
+    public string playerId;
     public string profileName;
     public string lobbyName;
     public string lobbyCode;
@@ -131,6 +132,7 @@ public class LobbyManager : Singleton<LobbyManager>
         options.SetProfile(this.profileName);
         await UnityServices.InitializeAsync(options);
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        this.playerId = AuthenticationService.Instance.PlayerId;
     }
 
     protected virtual void LobbyUpdate()

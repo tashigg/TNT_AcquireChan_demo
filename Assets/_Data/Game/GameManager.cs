@@ -73,7 +73,7 @@ public class GameManager : Singleton<GameManager>
         var updatePlayerOptions = new UpdatePlayerOptions();
         if (outgoingSessionDetails.AddTo(updatePlayerOptions))
         {
-            await LobbyService.Instance.UpdatePlayerAsync(LobbyManager.Instance.lobbyId, LobbyManager.Instance.profileName, updatePlayerOptions);
+            await LobbyService.Instance.UpdatePlayerAsync(LobbyManager.Instance.lobbyId, LobbyManager.Instance.playerId, updatePlayerOptions);
         }
 
         if (LobbyManager.Instance.isHost)

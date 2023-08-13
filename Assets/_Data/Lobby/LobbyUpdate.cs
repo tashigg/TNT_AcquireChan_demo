@@ -9,7 +9,4 @@ public class LobbyUpdate : LobbyAbstract
 {
     public TashiNetworkTransport NetworkTransport => NetworkManager.Singleton.NetworkConfig.NetworkTransport as TashiNetworkTransport;
 
-
-
-
 }
