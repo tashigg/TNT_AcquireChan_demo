@@ -1706,7 +1706,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1007833985977138510}
   - component: {fileID: 918250976103206914}
-  - component: {fileID: 2694097629352501318}
+  - component: {fileID: 4156555724945275214}
   m_Layer: 8
   m_Name: AcquireChan
   m_TagString: Untagged
@@ -1753,7 +1753,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2694097629352501318
+--- !u!114 &4156555724945275214
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1766,7 +1766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TransitionStateInfoList: []
-  m_Animator: {fileID: 0}
+  m_Animator: {fileID: 918250976103206914}
 --- !u!1 &1004181736901331106
 GameObject:
   m_ObjectHideFlags: 0
