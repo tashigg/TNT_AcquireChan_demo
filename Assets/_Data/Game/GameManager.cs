@@ -48,7 +48,12 @@ public class GameManager : Singleton<GameManager>
         string lobbyId = LobbyManager.Instance.lobbyId;
         var lobby = await LobbyService.Instance.GetLobbyAsync(lobbyId);
         var incomingSessionDetails = IncomingSessionDetails.FromUnityLobby(lobby);
-        NetworkTransport.UpdateSessionDetails(incomingSessionDetails);
+
+        if (incomingSessionDetails.AddressBook.Count == lobby.Players.Count)
+        {
+            Debug.LogWarning("Update Session Details");
+            NetworkTransport.UpdateSessionDetails(incomingSessionDetails);
+        }
     }
 
     protected async void BattleUpdate()
