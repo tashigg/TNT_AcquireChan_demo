@@ -671,10 +671,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_WalkSpeed: 2
-  m_RunSpeed: 3.5
+  m_RunSpeed: 7
   m_RotateSpeed: 8
-  m_JumpForce: 300
-  m_RunningStart: 1
+  m_JumpForce: 70
+  m_RigidBody: {fileID: 949386518124831268}
+  m_Animator: {fileID: 918250976103206914}
+  m_MoveTime: 0
+  m_MoveSpeed: 0
+  m_IsGround: 1
 --- !u!114 &7483707394843418578
 MonoBehaviour:
   m_ObjectHideFlags: 0

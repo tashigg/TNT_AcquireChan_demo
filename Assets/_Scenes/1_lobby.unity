@@ -3981,6 +3981,7 @@ MonoBehaviour:
   inputLobbyCode: {fileID: 2040219318}
   inputPlayerCount: {fileID: 41994258}
   txtTextLobbyId: {fileID: 2059051546}
+  playerId: 
   profileName: 
   lobbyName: 
   lobbyCode: 
@@ -4404,9 +4405,24 @@ PrefabInstance:
       propertyPath: m_Name
       value: NetworkPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 3317815936948968803, guid: c972206e740f1bb4ead83d3cfe68a7fc, type: 3}
+      propertyPath: networkObject
+      value: 
+      objectReference: {fileID: 7483707394843418585}
     - target: {fileID: 7483707394843418578, guid: c972206e740f1bb4ead83d3cfe68a7fc, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1625037540
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c972206e740f1bb4ead83d3cfe68a7fc, type: 3}
+--- !u!114 &7483707394843418585 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7483707394843418578, guid: c972206e740f1bb4ead83d3cfe68a7fc, type: 3}
+  m_PrefabInstance: {fileID: 7483707394843418580}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
