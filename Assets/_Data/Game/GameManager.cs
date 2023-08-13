@@ -38,8 +38,6 @@ public class GameManager : Singleton<GameManager>
     {
         if (LobbyManager.Instance.isHost) this.networkManager.StartHost();
         else this.networkManager.StartClient();
-
-        this.ReceiveIncomingDetail();
     }
 
     protected virtual void ReceiveIncomingDetail()
@@ -70,6 +68,7 @@ public class GameManager : Singleton<GameManager>
         {
             this._nextLobbyRefresh = Time.realtimeSinceStartup + 2;
             this.LobbyUpdating();
+            this.ReceiveIncomingDetail();
         }
     }
 
