@@ -6,123 +6,105 @@ using UnityEngine;
 
 public class NetworkCharController : SaiMonoBehaviour
 {
-	[Header("Default")]
-	[SerializeField] private float	m_WalkSpeed		= 2.0f;
-	[SerializeField] private float	m_RunSpeed		= 7f;
-	[SerializeField] private float	m_RotateSpeed	= 8.0f;
-	[SerializeField] private float	m_JumpForce		= 70.0f;
+    [Header("Default")]
+    [SerializeField] protected float m_WalkSpeed = 2.0f;
+    [SerializeField] protected float m_RunSpeed = 7f;
+    [SerializeField] protected float m_RotateSpeed = 8.0f;
+    [SerializeField] protected float m_JumpForce = 70.0f;
 
-	[SerializeField] private Rigidbody	m_RigidBody	= null;
-	[SerializeField] private Animator	m_Animator	= null;
-	[SerializeField] private float		m_MoveTime	= 0;
-	[SerializeField] private float		m_MoveSpeed	= 0.0f;
-	[SerializeField] private bool		m_IsGround	= true;
+    [SerializeField] protected Rigidbody m_RigidBody = null;
+    [SerializeField] protected Animator m_Animator = null;
+    [SerializeField] protected float m_MoveTime = 0;
+    [SerializeField] protected float m_MoveSpeed = 0.0f;
 
-	[Header("Network")]
-	public NetworkObject networkObject;
+    [Header("Network")]
+    public NetworkObject networkObject;
+    public PlayerData playerData;
 
-
-	protected override void Awake()
-	{
-		base.Awake();
-		m_MoveSpeed = m_WalkSpeed;
-	}
+    protected override void Awake()
+    {
+        base.Awake();
+        m_MoveSpeed = m_WalkSpeed;
+    }
 
     protected override void LoadComponents()
     {
         base.LoadComponents();
-		this.LoadRigibody();
-		this.LoadAnimator();
-		this.LoadNetworkObject();
-	}
+        this.LoadRigibody();
+        this.LoadAnimator();
+        this.LoadNetworkObject();
+        this.LoadPlayerData();
+    }
 
     private void Update()
-	{
-		this.Moving();
-	}
-
-	protected virtual void LoadRigibody()
-	{
-		if (this.m_RigidBody != null) return;
-		this.m_RigidBody = GetComponentInChildren<Rigidbody>();
-		Debug.LogWarning(transform.name + ": LoadRigibody", gameObject);
-	}
-
-	protected virtual void LoadAnimator()
-	{
-		if (this.m_Animator != null) return;
-		this.m_Animator = GetComponentInChildren<Animator>();
-		Debug.LogWarning(transform.name + ": LoadAnimator", gameObject);
-	}
-
-	protected virtual void LoadNetworkObject()
-	{
-		if (this.networkObject != null) return;
-		this.networkObject = GetComponent<NetworkObject>();
-		Debug.LogWarning(transform.name + ": LoadNetworkObject", gameObject);
-	}
-
-	protected virtual void Moving()
     {
-		if (!this.networkObject.IsOwner) return;
-		if (null == m_RigidBody) return;
-		if (null == m_Animator) return;
+        this.Moving();
+    }
 
-		// check ground
-		float rayDistance = 0.3f;
-		Vector3 rayOrigin = (this.transform.position + (Vector3.up * rayDistance * 0.5f));
-		bool ground = Physics.Raycast(rayOrigin, Vector3.down, rayDistance, LayerMask.GetMask("Default"));
-		if (ground != m_IsGround)
-		{
-			m_IsGround = ground;
+    protected virtual void LoadRigibody()
+    {
+        if (this.m_RigidBody != null) return;
+        this.m_RigidBody = GetComponentInChildren<Rigidbody>();
+        Debug.LogWarning(transform.name + ": LoadRigibody", gameObject);
+    }
 
-			// landing
-			if (m_IsGround)
-			{
-				m_Animator.Play("landing");
-			}
-		}
+    protected virtual void LoadAnimator()
+    {
+        if (this.m_Animator != null) return;
+        this.m_Animator = GetComponentInChildren<Animator>();
+        Debug.LogWarning(transform.name + ": LoadAnimator", gameObject);
+    }
 
-		// input
-		Vector3 vel = m_RigidBody.velocity;
-		float h = Input.GetAxis("Horizontal");
-		float v = Input.GetAxis("Vertical");
-		bool isMove = ((0 != h) || (0 != v));
+    protected virtual void LoadNetworkObject()
+    {
+        if (this.networkObject != null) return;
+        this.networkObject = GetComponent<NetworkObject>();
+        Debug.LogWarning(transform.name + ": LoadNetworkObject", gameObject);
+    }
 
-		m_MoveTime = isMove ? (m_MoveTime + Time.deltaTime) : 0;
-		//bool isRun = (m_RunningStart <= m_MoveTime);
-		bool isRun = Input.GetKey(KeyCode.LeftShift);
+    protected virtual void LoadPlayerData()
+    {
+        if (this.playerData != null) return;
+        this.playerData = GetComponentInChildren<PlayerData>();
+        Debug.LogWarning(transform.name + ": LoadPlayerData", gameObject);
+    }
 
-		// move speed (walk / run)
-		float moveSpeed = isRun ? m_RunSpeed : m_WalkSpeed;
-		m_MoveSpeed = isMove ? Mathf.Lerp(m_MoveSpeed, moveSpeed, (8.0f * Time.deltaTime)) : m_WalkSpeed;
-		//		m_MoveSpeed = moveSpeed;
+    protected virtual void Moving()
+    {
+        if (!this.playerData.IsServer) return;
+        float h = this.playerData.horizontal.Value;
+        float v = this.playerData.vertical.Value;
+        bool isRun = this.playerData.isRun.Value;
 
-		Vector3 inputDir = new Vector3(h, 0, v);
-		if (1.0f < inputDir.magnitude) inputDir.Normalize();
+        // input
+        Vector3 vel = m_RigidBody.velocity;
 
-		if (0 != h) vel.x = (inputDir.x * m_MoveSpeed);
-		if (0 != v) vel.z = (inputDir.z * m_MoveSpeed);
+        bool isMove = ((0 != h) || (0 != v));
 
-		m_RigidBody.velocity = vel;
+        m_MoveTime = isMove ? (m_MoveTime + Time.deltaTime) : 0;
+        //bool isRun = (m_RunningStart <= m_MoveTime);
 
-		if (isMove)
-		{
-			// rotation
-			float t = (m_RotateSpeed * Time.deltaTime);
-			Vector3 forward = Vector3.Slerp(this.transform.forward, inputDir, t);
-			this.transform.rotation = Quaternion.LookRotation(forward);
-		}
+        // move speed (walk / run)
+        float moveSpeed = isRun ? m_RunSpeed : m_WalkSpeed;
+        m_MoveSpeed = isMove ? Mathf.Lerp(m_MoveSpeed, moveSpeed, (8.0f * Time.deltaTime)) : m_WalkSpeed;
 
-		m_Animator.SetBool("isMove", isMove);
-		m_Animator.SetBool("isRun", isRun);
+        Vector3 inputDir = new Vector3(h, 0, v);
+        if (1.0f < inputDir.magnitude) inputDir.Normalize();
 
+        if (0 != h) vel.x = (inputDir.x * m_MoveSpeed);
+        if (0 != v) vel.z = (inputDir.z * m_MoveSpeed);
 
-		// jump
-		if (Input.GetButtonDown("Jump") && m_IsGround)
-		{
-			m_Animator.Play("jump");
-			m_RigidBody.AddForce(Vector3.up * m_JumpForce);
-		}
-	}
+        m_RigidBody.velocity = vel;
+
+        if (isMove)
+        {
+            // rotation
+            float t = (m_RotateSpeed * Time.deltaTime);
+            Vector3 forward = Vector3.Slerp(this.transform.forward, inputDir, t);
+            this.transform.rotation = Quaternion.LookRotation(forward);
+        }
+
+        m_Animator.SetBool("isMove", isMove);
+        m_Animator.SetBool("isRun", isRun);
+    }
 }
