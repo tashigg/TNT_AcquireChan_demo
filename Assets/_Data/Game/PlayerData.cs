@@ -11,11 +11,12 @@ public class PlayerData : NetworkBehaviour
 
     private void Update()
     {
-        this.ClientUpdateInput();
+        this.OwnerUpdateInput();
     }
 
-    protected virtual void ClientUpdateInput()
+    protected virtual void OwnerUpdateInput()
     {
+        if (!this.IsOwner) return;
         this.horizontal.Value = Input.GetAxis("Horizontal");
         this.vertical.Value = Input.GetAxis("Vertical");
         this.isRun.Value = Input.GetKey(KeyCode.LeftShift);
