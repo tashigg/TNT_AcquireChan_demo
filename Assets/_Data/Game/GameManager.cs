@@ -42,7 +42,7 @@ public class GameManager : Singleton<GameManager>
 
     protected virtual async void ReceiveIncomingDetail()
     {
-        if (NetworkTransport.SessionHasStarted) return;
+        if (NetworkTransport.SessionState == SessionState.Starting) return;
         Debug.LogWarning("Receive Incoming Detail");
 
         string lobbyId = LobbyManager.Instance.lobbyId;
@@ -52,7 +52,16 @@ public class GameManager : Singleton<GameManager>
         if (incomingSessionDetails.AddressBook.Count == lobby.Players.Count)
         {
             Debug.LogWarning("Update Session Details");
-            NetworkTransport.UpdateSessionDetails(incomingSessionDetails);
+            NetworkTransport.StartSession(incomingSessionDetails,
+                        () =>
+                        {
+                            Debug.LogWarning("StartSession succeeded");
+                        },
+                        () =>
+                        {
+                            Debug.LogWarning("StartSession failed");
+                        }
+                    );
         }
     }
 
