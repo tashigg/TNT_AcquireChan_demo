@@ -331,6 +331,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkManager: {fileID: 3167694042668405259}
+  _nextHeartbeat: 0
+  _nextLobbyRefresh: 0
 --- !u!4 &1928252416
 Transform:
   m_ObjectHideFlags: 0
@@ -392,7 +394,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RunInBackground: 1
-  LogLevel: 1
+  LogLevel: 2
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 3167694042668405261}
@@ -430,7 +432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Config:
     BindPort: 0
-    SyncInterval: 33
+    MinBaseEventIntervalMicros: 1500
     NetworkMode: 3
     TashiRelayBaseUrl: https://eastus.relay.infra.tashi.dev
     TashiRelayApiKey: k0qF4Synlgkpy5I1oiSE6wrS0eaKmJSt

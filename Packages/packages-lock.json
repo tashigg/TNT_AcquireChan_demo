@@ -317,7 +317,7 @@
       }
     },
     "dev.tashi.network.transport": {
-      "version": "file:E:/Projects/tashi/TNT/TashiNetworkTransport-UnityPlugin-0.3.2.tgz",
+      "version": "file:E:/Projects/tashi/TNT/TashiNetworkTransport-UnityPlugin-0.4.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
