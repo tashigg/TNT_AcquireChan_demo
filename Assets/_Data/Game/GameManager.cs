@@ -42,7 +42,7 @@ public class GameManager : Singleton<GameManager>
 
     protected virtual async void ReceiveIncomingDetail()
     {
-        if (NetworkTransport.SessionState == SessionState.Starting) return;
+        if (NetworkTransport.SessionState != SessionState.NotStarted) return;
         Debug.LogWarning("Receive Incoming Detail");
 
         string lobbyId = LobbyManager.Instance.lobbyId;
